@@ -209,8 +209,18 @@ export default {
     },
   },
   watch: {
-    tree(newTree) {
-      this.treeModel.root = toRaw(newTree);
+    tree: {
+      handler(newTree) {
+        const previousExpanded = this.treeModel?.expanded || [];
+        this.treeModel = new TreeModel(toRaw(newTree), {
+          filter: this.filter,
+          defaultExpanded: this.defaultExpanded,
+          autoSelectDescendants: this.autoSelectDescendants,
+          autoDeselectDescendants: this.autoDeselectDescendants,
+          previousExpanded,
+        });
+      },
+      deep: true,
     },
     filter(newFilter) {
       this.treeModel.filter = newFilter;
@@ -228,6 +238,7 @@ export default {
       defaultExpanded: this.defaultExpanded,
       autoSelectDescendants: this.autoSelectDescendants,
       autoDeselectDescendants: this.autoDeselectDescendants,
+      previousExpanded: [],
     });
 
     this.treeModel.on("expand", (expanded, sourceEvent, expandedItems) => {

@@ -21,7 +21,7 @@ export default class extends EventManager {
       writable: true,
     });
 
-    this._initExpanded(options.defaultExpanded);
+    this._initExpanded(options.defaultExpanded, options.previousExpanded);
 
     this.selected = Object.values(this.nodesMap)
       .filter(({ selected }) => selected)
@@ -39,8 +39,14 @@ export default class extends EventManager {
     this.draggedNodeId = undefined;
   }
 
-  _initExpanded(defaultExpanded) {
-    if (defaultExpanded) {
+  _initExpanded(defaultExpanded, previousExpanded = []) {
+    if (
+      previousExpanded.length &&
+      previousExpanded.every((id) => this.nodesMap[id])
+    ) {
+      this.expanded = previousExpanded;
+      this.expandedWithoutFilter = this.expanded;
+    } else if (defaultExpanded) {
       this.expandNode(defaultExpanded);
     } else if (this.root && this.root.id) {
       this.expanded = [this.root.id];
