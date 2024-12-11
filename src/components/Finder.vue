@@ -219,6 +219,7 @@ export default {
           autoDeselectDescendants: this.autoDeselectDescendants,
           previousExpanded,
         });
+        this.attachTreeModelListeners();
       },
       deep: true,
     },
@@ -240,97 +241,7 @@ export default {
       autoDeselectDescendants: this.autoDeselectDescendants,
       previousExpanded: [],
     });
-
-    this.treeModel.on("expand", (expanded, sourceEvent, expandedItems) => {
-      if (sourceEvent !== "dragover") {
-        this.$nextTick(() => {
-          this._scrollToRight(this.scrollAnimationDuration);
-        });
-      }
-
-      /**
-       * This event is triggered when an item has been expanded.
-       *
-       * ```html
-       * <Finder :tree="tree" @expand="onExpand"/>
-       * ```
-       *
-       * ```js
-       * onExpand({ expanded, sourceEvent, expandedItems }) {
-       *   console.log(
-       *     `Items with ${expanded.join()} IDs are now expanded`
-       *   );
-       * }
-       * ```
-       *
-       * @event expand
-       * @type {object}
-       * @property {Array<string>} expanded      IDs of expanded items
-       * @property {string}        sourceEvent   Name of the event that triggered the action (`"click"`, `"focus"`, `"drop"`, `"dragover"` or `undefined`)
-       * @property {Array<Object>} expandedItems List of expanded items
-       */
-      this.$emit("expand", {
-        expanded,
-        sourceEvent,
-        expandedItems,
-      });
-    });
-    this.treeModel.on("select", (selected, selectedItems) => {
-      /**
-       * This event is triggered when an item has been selected.
-       *
-       * ```html
-       * <Finder :tree="tree" @select="onSelect"/>
-       * ```
-       *
-       * ```js
-       * onSelect({ selected, selectedItems }) {
-       *   console.log(
-       *     `Items with ${selected.join()} IDs are now selected`
-       *   );
-       * }
-       * ```
-       *
-       * @event select
-       * @type {object}
-       * @property {Array<string>} selected      IDs of selected items
-       * @property {Array<Object>} selectedItems List of selected items
-       */
-      this.$emit("select", {
-        selected,
-        selectedItems,
-      });
-    });
-    this.treeModel.on("move", ({ moved, to, index }) => {
-      /**
-       * This event is triggered when an item has been moved by drag and drop.
-       * When an item is dropped on a dropzone between two elements, a `index` is also provided.
-       *
-       * ```html
-       * <Finder :tree="tree" @move="onMove"/>
-       * ```
-       *
-       * ```js
-       * onMove({ moved, to, index }) {
-       *   console.log(
-       *     `Item with ${moved} ID has been moved
-       *     to its new parent with ${to} ID`
-       *   );
-       * }
-       * ```
-       *
-       * @event move
-       * @type {object}
-       * @property {string} moved ID of the moved item
-       * @property {string} to    ID of the parent on which the item has been moved to
-       * @property {number} index Index of the dropzone
-       */
-      this.$emit("move", {
-        moved,
-        to,
-        index,
-      });
-    });
+    this.attachTreeModelListeners();
   },
   methods: {
     /**
@@ -388,6 +299,98 @@ export default {
         window.requestAnimationFrame(step);
       };
       window.requestAnimationFrame(step);
+    },
+    attachTreeModelListeners() {
+      this.treeModel.on("expand", (expanded, sourceEvent, expandedItems) => {
+        if (sourceEvent !== "dragover") {
+          this.$nextTick(() => {
+            this._scrollToRight(this.scrollAnimationDuration);
+          });
+        }
+
+        /**
+         * This event is triggered when an item has been expanded.
+         *
+         * ```html
+         * <Finder :tree="tree" @expand="onExpand"/>
+         * ```
+         *
+         * ```js
+         * onExpand({ expanded, sourceEvent, expandedItems }) {
+         *   console.log(
+         *     `Items with ${expanded.join()} IDs are now expanded`
+         *   );
+         * }
+         * ```
+         *
+         * @event expand
+         * @type {object}
+         * @property {Array<string>} expanded      IDs of expanded items
+         * @property {string}        sourceEvent   Name of the event that triggered the action (`"click"`, `"focus"`, `"drop"`, `"dragover"` or `undefined`)
+         * @property {Array<Object>} expandedItems List of expanded items
+         */
+        this.$emit("expand", {
+          expanded,
+          sourceEvent,
+          expandedItems,
+        });
+      });
+      this.treeModel.on("select", (selected, selectedItems) => {
+        /**
+       * This event is triggered when an item has been selected.
+       *
+       * ```html
+       * <Finder :tree="tree" @select="onSelect"/>
+       * ```
+       *
+       * ```js
+       * onSelect({ selected, selectedItems }) {
+       *   console.log(
+       *     `Items with ${selected.join()} IDs are now selected`
+       *   );
+       * }
+       * ```
+       *
+       * @event select
+       * @type {object}
+       * @property {Array<string>} selected      IDs of selected items
+       * @property {Array<Object>} selectedItems List of selected items
+       */
+        this.$emit("select", {
+          selected,
+          selectedItems,
+        });
+      });
+      this.treeModel.on("move", ({ moved, to, index }) => {
+        /**
+         * This event is triggered when an item has been moved by drag and drop.
+         * When an item is dropped on a dropzone between two elements, a `index` is also provided.
+         *
+         * ```html
+         * <Finder :tree="tree" @move="onMove"/>
+         * ```
+         *
+         * ```js
+         * onMove({ moved, to, index }) {
+         *   console.log(
+         *     `Item with ${moved} ID has been moved
+         *     to its new parent with ${to} ID`
+         *   );
+         * }
+         * ```
+         *
+         * @event move
+         * @type {object}
+         * @property {string} moved ID of the moved item
+         * @property {string} to    ID of the parent on which the item has been moved to
+         * @property {number} index Index of the dropzone
+         */
+        this.$emit("move", {
+          moved,
+          to,
+          index,
+        });
+      });
     },
   },
 };

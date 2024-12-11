@@ -1,7 +1,7 @@
 {
   "name": "@cpark-241209/vue-finder",
   "description": "A Vue.js component to display hierarchical data",
-  "version": "5.0.0",
+  "version": "5.0.2",
   "license": "MIT",
   "main": "dist/vue-finder.umd.js",
   "module": "dist/vue-finder.es.js",
@@ -44,12 +44,11 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -c .storybook -o docs/dist/stories",
     "cz": "git-cz",
-    "test": "$npm_execpath run lint && vitest --coverage",
+    "test": "npm run lint && vitest --coverage",
     "test:update": "vitest -u",
     "test:watch": "vitest",
     "lint": "eslint --ext .js,.vue .",
     "lint:fix": "eslint --ext .js,.vue . --fix",
-    "prepublishOnly": "$npm_execpath run build",
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
@@ -150,5 +149,6 @@
     "last 1 version",
     "> 0.25%",
     "not dead"
-  ]
+  ],
+  "packageManager": "pnpm@9.12.1+sha512.e5a7e52a4183a02d5931057f7a0dbff9d5e9ce3161e33fa68ae392125b79282a8a8a470a51dfc8a0ed86221442eb2fb57019b0990ed24fab519bf0e1bc5ccfc4"
 }
